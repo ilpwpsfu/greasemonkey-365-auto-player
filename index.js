@@ -24,7 +24,7 @@ startButton.onclick = () => {
 
 const stopButton = document.createElement('button')
 stopButton.innerText = 'X'
-stopButton.style = 'width: 40px; height: 40px; text-align: center; line-height: 40px; background: rgba(0,0,0,.8); color: white; border: 1px solid white; position: fixed; right: 20px; top: 20px; z-index: 10000;'
+stopButton.style = 'width: 40px; height: 40px; text-align: center; line-height: 40px; background: rgba(0,0,0,.8); color: white; border: 1px solid white; position: fixed; right: 20px; top: 40px; z-index: 10000;'
 stopButton.onclick = () => {
   stopButton.remove()
   
@@ -83,6 +83,7 @@ function start() {
 		if (!toggled) {
 			document.querySelector('.video-container').style = ''
 			document.querySelector('html').style = ''
+      playerDocument ?? playerDocument.removeEventListener('mousemove', mousemoveHandler)
 
 			return
 		}
@@ -90,7 +91,6 @@ function start() {
     playerDocument = document.querySelector('iframe').contentWindow.document
 
     playerDocument.addEventListener('mousemove', mousemoveHandler)
-    document.addEventListener('mousemove', mousemoveHandler)
     document.addEventListener('keyup', keyupHandler)
 
     document.querySelector('.video-container').style = 'position: fixed; top: 0; transform: translateY(-40px); left: 0; width: 100vw; height: 100vh; z-index: 1000;'
