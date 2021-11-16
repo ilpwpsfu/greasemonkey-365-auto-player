@@ -5,11 +5,81 @@
 // @include https://smotret-anime.online/*
 // ==/UserScript==
 
+let interval, timeout, finalInterval, mouseTimeout, playerDocument
+let toggled = localStorage.getItem('smotretAnime') == 'true'
 
-let interval, timeout
-const func = () => {
+const startButton = document.createElement('button')
+startButton.innerText = 'Начать Просмотр'
+startButton.style = 'width: 400px; height: 40px; text-align: center; line-height: 40px; background: rgba(0,0,0,.8); color: white; border: 1px solid white; position: fixed; left: 20px; bottom: 20px; z-index: 10000;'
+if (!toggled) document.querySelector('body').appendChild(startButton)
+        
+startButton.onclick = () => {
+  startButton.remove()
+  
+  toggled = true
+  localStorage.setItem('smotretAnime', toggled)
+  
+  start()
+}
+
+const stopButton = document.createElement('button')
+stopButton.innerText = 'X'
+stopButton.style = 'width: 40px; height: 40px; text-align: center; line-height: 40px; background: rgba(0,0,0,.8); color: white; border: 1px solid white; position: fixed; right: 20px; top: 20px; z-index: 10000;'
+stopButton.onclick = () => {
+  stopButton.remove()
+  
+  toggled = false
+  localStorage.setItem('smotretAnime', toggled)
+
+  document.querySelector('body').appendChild(startButton)
+  
+  start()
+}
+
+document.querySelector('iframe').onload = start
+
+function mousemoveHandler(e) {
+  if (!playerDocument) return
+
+  const controlBar = playerDocument.querySelector('.vjs-control-bar')
+
+  controlBar.style = 'transform: translateY(-78px);'
+  playerDocument.querySelector('body').appendChild(stopButton)
+
+  clearTimeout(mouseTimeout)
+
+  mouseTimeout = setTimeout(() => {
+    controlBar.style = ''
+    stopButton.remove()
+  }, 3000)
+}
+
+function keyupHandler (e) {
+  if (!playerDocument) return
+
+  const media = playerDocument.querySelector('video')
+
+  if (e.code == 'ArrowLeft') media.currentTime -= 5
+  if (e.code == 'ArrowRight') media.currentTime += 5
+  if (e.code == 'Escape') {
+    toggled = false
+    localStorage.setItem('smotretAnime', toggled)
+
+    document.querySelector('body').appendChild(startButton)
+  }
+  if (e.code == 'Space') {
+    if (media.paused) media.play()
+    else media.pause()
+  }
+}
+
+function start() {
   setTimeout(() => {
-    console.log('autoplay loaded')
+		clearTimeout(timeout)
+  	clearInterval(interval)
+  	clearInterval(finalInterval)
+    stopButton.remove()
+
 		if (!toggled) {
 			document.querySelector('.video-container').style = ''
 			document.querySelector('html').style = ''
@@ -17,9 +87,11 @@ const func = () => {
 			return
 		}
   
-		clearTimeout(timeout)
-  	clearInterval(interval)
-  	const playerDocument = document.querySelector('iframe').contentWindow.document
+    playerDocument = document.querySelector('iframe').contentWindow.document
+
+    playerDocument.addEventListener('mousemove', mousemoveHandler)
+    document.addEventListener('mousemove', mousemoveHandler)
+    document.addEventListener('keyup', keyupHandler)
 
     document.querySelector('.video-container').style = 'position: fixed; top: 0; transform: translateY(-40px); left: 0; width: 100vw; height: 100vh; z-index: 1000;'
     document.querySelector('html').style = 'overflow: hidden; height: 100vh'
@@ -28,7 +100,6 @@ const func = () => {
     interval = setInterval(() => {
       const progress = +playerDocument.querySelector('.vjs-play-progress').style.width.match(/[0-9\.]{0,}/)[0]
       const nextLoc = document.querySelectorAll('a.waves-effect.waves-light.btn.orange.accent-4.white-text')[1].href
-      console.log(progress)
 
       if (progress >= 93) {
         clearInterval(interval)
@@ -40,29 +111,24 @@ const func = () => {
         const button = playerDocument.createElement('button')
         button.innerText = 'Отменить переключение'
         button.style = 'width: 400px; height: 40px; text-align: center; line-height: 40px; background: rgba(0,0,0,.4); color: white; border: 1px solid white; position: absolute; left: 20px; top: 80px;'
-        playerDocument.querySelector('body').appendChild(button)
-        
         button.onclick = () => {
           playerDocument.querySelector('body').removeChild(button)
           clearTimeout(timeout)
         }
+
+        playerDocument.querySelector('body').appendChild(button)
+      }
+    })
+
+    finalInterval = setInterval(() => {
+      const progress = +playerDocument.querySelector('.vjs-play-progress').style.width.match(/[0-9\.]{0,}/)[0]
+      const nextLoc = document.querySelectorAll('a.waves-effect.waves-light.btn.orange.accent-4.white-text')[1].href
+
+      if (progress >= 99.9) {
+        clearInterval(finalInterval)
+
+        location = nextLoc
       }
     })
   }, 0)
 }
-let toggled = localStorage.getItem('smotretAnime') == 'true'
-console.log('autoplay', toggled)
-
-document.addEventListener('keyup', e => {
-  if (e.code == 'KeyO') {
-    toggled = !toggled
-    localStorage.setItem('smotretAnime', toggled)
-
-    console.log(toggled, 'pressed')
-
-		func()
-  }
-})
-
-document.querySelector('iframe').onload = func
-
