@@ -150,6 +150,7 @@ function start() {
 
       if (progress >= 93) {
         clearInterval(interval)
+        localStorage.removeItem(location.href)
 
         timeout = setTimeout(() => {
           location = nextLoc
@@ -173,6 +174,7 @@ function start() {
 
       if (progress >= 99.9) {
         clearInterval(finalInterval)
+        localStorage.removeItem(location.href)
 
         location = nextLoc
       }
