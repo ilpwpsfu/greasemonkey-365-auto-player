@@ -41,13 +41,11 @@ stopButton.onclick = () => {
 }
 
 document.querySelector('iframe').onload = () => {
-  const data = JSON.parse(localStorage.getItem('rememberedTime'))
-
   start()
 
-  if (location.href == data.location) setTimeout(() => {
+  if (localStorage.getItem(location.href)) setTimeout(() => {
     console.log(playerDocument.querySelector('video'))
-    playerDocument.querySelector('video').currentTime = data.currentTime
+    playerDocument.querySelector('video').currentTime = localStorage.getItem(location.href)
   }, 1000)
 }
 
@@ -145,8 +143,7 @@ function start() {
     playerDocument.querySelector('.vjs-big-play-button').click()
     
     interval = setInterval(() => {
-      const data = JSON.stringify({ location: location.href, currentTime: playerDocument.querySelector('video').currentTime })
-      localStorage.setItem('rememberedTime', data)
+      localStorage.setItem(location.href, playerDocument.querySelector('video').currentTime)
 
       const progress = +playerDocument.querySelector('.vjs-play-progress').style.width.match(/[0-9\.]{0,}/)[0]
       const nextLoc = document.querySelectorAll('a.waves-effect.waves-light.btn.orange.accent-4.white-text')[1].href
