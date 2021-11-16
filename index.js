@@ -32,8 +32,12 @@ stopButton.onclick = () => {
   localStorage.setItem('smotretAnime', toggled)
 
   document.querySelector('body').appendChild(startButton)
+  playerDocument.querySelector('video').pause()
   
   start()
+
+  clearTimeout(mouseTimeout)
+  playerDocument.querySelector('.vjs-control-bar').style = ''
 }
 
 document.querySelector('iframe').onload = start
@@ -66,6 +70,10 @@ function keyupHandler (e) {
     localStorage.setItem('smotretAnime', toggled)
 
     document.querySelector('body').appendChild(startButton)
+    media.pause()
+
+    clearTimeout(mouseTimeout)
+    playerDocument.querySelector('.vjs-control-bar').style = ''
   }
   if (e.code == 'Space') {
     if (media.paused) media.play()
