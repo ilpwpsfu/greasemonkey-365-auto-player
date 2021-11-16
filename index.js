@@ -41,8 +41,9 @@ stopButton.onclick = () => {
 }
 
 document.querySelector('iframe').onload = () => {
-  start()
   const data = JSON.parse(localStorage.getItem('rememberedTime'))
+  
+  start()
 
   if (location.href == data.location) playerDocument.querySelector('video').currentTime = data.currentTime
 }
