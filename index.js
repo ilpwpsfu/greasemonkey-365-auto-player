@@ -7,6 +7,7 @@
 
 let interval, timeout, finalInterval, mouseTimeout, playerDocument
 let toggled = localStorage.getItem('smotretAnime') == 'true'
+let lastTime = -1
 
 const startButton = document.createElement('button')
 startButton.innerText = 'Начать Просмотр'
@@ -147,6 +148,10 @@ function start() {
 
       const progress = +playerDocument.querySelector('.vjs-play-progress').style.width.match(/[0-9\.]{0,}/)[0]
       const nextLoc = document.querySelectorAll('a.waves-effect.waves-light.btn.orange.accent-4.white-text')[1].href
+
+      if (lastProgress == progress && !playerDocument.querySelector('video').paused) return location.reload()
+
+      lastProgress = progress
 
       if (progress >= 93) {
         clearInterval(interval)
