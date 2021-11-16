@@ -42,10 +42,13 @@ stopButton.onclick = () => {
 
 document.querySelector('iframe').onload = () => {
   const data = JSON.parse(localStorage.getItem('rememberedTime'))
-  
+
   start()
 
-  if (location.href == data.location) playerDocument.querySelector('video').currentTime = data.currentTime
+  if (location.href == data.location) setTimeout(() => {
+    console.log(playerDocument.querySelector('video'))
+    playerDocument.querySelector('video').currentTime = data.currentTime
+  }, 1000)
 }
 
 function mousemoveHandler(e) {
