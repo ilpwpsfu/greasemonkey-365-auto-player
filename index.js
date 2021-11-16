@@ -87,11 +87,11 @@ function start() {
   	clearInterval(interval)
   	clearInterval(finalInterval)
     stopButton.remove()
+    playerDocument ?? playerDocument.removeEventListener('mousemove', mousemoveHandler)
 
 		if (!toggled) {
 			document.querySelector('.video-container').style = ''
 			document.querySelector('html').style = ''
-      playerDocument ?? playerDocument.removeEventListener('mousemove', mousemoveHandler)
 
 			return
 		}
