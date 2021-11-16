@@ -44,7 +44,7 @@ document.querySelector('iframe').onload = () => {
   start()
   const data = JSON.parse(localStorage.getItem('rememberedTime'))
 
-  if (location == data.location) playerDocument.querySelector('video').currentTime = data.currentTime
+  if (location.href == data.location) playerDocument.querySelector('video').currentTime = data.currentTime
 }
 
 function mousemoveHandler(e) {
@@ -141,7 +141,7 @@ function start() {
     playerDocument.querySelector('.vjs-big-play-button').click()
     
     interval = setInterval(() => {
-      const data = JSON.stringify({ location, currentTime: playerDocument.querySelector('video').currentTime })
+      const data = JSON.stringify({ location: location.href, currentTime: playerDocument.querySelector('video').currentTime })
       localStorage.setItem('rememberedTime', data)
 
       const progress = +playerDocument.querySelector('.vjs-play-progress').style.width.match(/[0-9\.]{0,}/)[0]
