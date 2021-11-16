@@ -40,7 +40,12 @@ stopButton.onclick = () => {
   playerDocument.querySelector('.vjs-control-bar').style = ''
 }
 
-document.querySelector('iframe').onload = start
+document.querySelector('iframe').onload = () => {
+  start()
+  const data = JSON.parse(localStorage.getItem('rememberedTime'))
+
+  if (location == data.location) playerDocument.querySelector('video').currentTime = data.currentTime
+}
 
 function mousemoveHandler(e) {
   if (!playerDocument) return
@@ -136,6 +141,9 @@ function start() {
     playerDocument.querySelector('.vjs-big-play-button').click()
     
     interval = setInterval(() => {
+      const data = JSON.stringify({ location, currentTime: playerDocument.querySelector('video').currentTime })
+      localStorage.setItem('rememberedTime', data)
+
       const progress = +playerDocument.querySelector('.vjs-play-progress').style.width.match(/[0-9\.]{0,}/)[0]
       const nextLoc = document.querySelectorAll('a.waves-effect.waves-light.btn.orange.accent-4.white-text')[1].href
 
@@ -156,7 +164,7 @@ function start() {
 
         playerDocument.querySelector('body').appendChild(button)
       }
-    })
+    }, 1000)
 
     finalInterval = setInterval(() => {
       const progress = +playerDocument.querySelector('.vjs-play-progress').style.width.match(/[0-9\.]{0,}/)[0]
@@ -168,5 +176,5 @@ function start() {
         location = nextLoc
       }
     })
-  }, 0)
+  }, 1000)
 }
