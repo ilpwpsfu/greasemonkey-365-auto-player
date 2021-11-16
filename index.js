@@ -63,14 +63,44 @@ function keyupHandler (e) {
 
   const media = playerDocument.querySelector('video')
 
-  if (e.code == 'ArrowLeft') media.currentTime -= 5
-  if (e.code == 'ArrowRight') media.currentTime += 5
+  if (e.code == 'ArrowLeft') {
+    media.currentTime -= 5
+
+    const controlBar = playerDocument.querySelector('.vjs-control-bar')
+
+    controlBar.style = 'transform: translateY(-78px);'
+    playerDocument.querySelector('body').appendChild(stopButton)
+
+    clearTimeout(mouseTimeout)
+
+    mouseTimeout = setTimeout(() => {
+      controlBar.style = ''
+      stopButton.remove()
+    }, 3000)
+  }
+  if (e.code == 'ArrowRight') {
+    media.currentTime += 5
+
+    const controlBar = playerDocument.querySelector('.vjs-control-bar')
+
+    controlBar.style = 'transform: translateY(-78px);'
+    playerDocument.querySelector('body').appendChild(stopButton)
+
+    clearTimeout(mouseTimeout)
+
+    mouseTimeout = setTimeout(() => {
+      controlBar.style = ''
+      stopButton.remove()
+    }, 3000)
+  }
   if (e.code == 'Escape') {
     toggled = false
     localStorage.setItem('smotretAnime', toggled)
 
     document.querySelector('body').appendChild(startButton)
     media.pause()
+
+    start()
 
     clearTimeout(mouseTimeout)
     playerDocument.querySelector('.vjs-control-bar').style = ''
