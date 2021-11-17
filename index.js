@@ -146,7 +146,7 @@ function start() {
     interval = setInterval(() => {
       localStorage.setItem(location.href, playerDocument.querySelector('video').currentTime)
 
-      const progress = +playerDocument.querySelector('.vjs-play-progress').style.width.match(/[0-9\.]{0,}/)[0]
+      const progress = getProgress()
       const nextLoc = document.querySelectorAll('a.waves-effect.waves-light.btn.orange.accent-4.white-text')[1].href
       console.log(lastProgress, progress)
 
@@ -175,10 +175,9 @@ function start() {
     }, 1000)
 
     finalInterval = setInterval(() => {
-      const progress = +playerDocument.querySelector('.vjs-play-progress').style.width.match(/[0-9\.]{0,}/)[0]
       const nextLoc = document.querySelectorAll('a.waves-effect.waves-light.btn.orange.accent-4.white-text')[1].href
 
-      if (progress >= 99.9) {
+      if (getProgress() >= 99.9) {
         clearInterval(finalInterval)
         localStorage.removeItem(location.href)
 
@@ -186,4 +185,11 @@ function start() {
       }
     })
   }, 1000)
+}
+
+function getProgress() {
+  const currentWidth = document.querySelector('iframe').contentWindow.document.querySelector('.vjs-play-progress').clientWidth
+  const maxWidth = document.querySelector('iframe').contentWindow.document.querySelector('.vjs-progress-holder').clientWidth
+
+  return currentWidth / maxWidth
 }
