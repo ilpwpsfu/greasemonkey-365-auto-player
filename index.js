@@ -154,7 +154,7 @@ function start() {
 
       lastProgress = progress
 
-      if (progress >= 93) {
+      if (progress >= .93) {
         clearInterval(interval)
         localStorage.removeItem(location.href)
 
@@ -177,7 +177,7 @@ function start() {
     finalInterval = setInterval(() => {
       const nextLoc = document.querySelectorAll('a.waves-effect.waves-light.btn.orange.accent-4.white-text')[1].href
 
-      if (getProgress() >= 99.9) {
+      if (getProgress() >= .999) {
         clearInterval(finalInterval)
         localStorage.removeItem(location.href)
 
